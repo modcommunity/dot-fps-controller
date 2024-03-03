@@ -48,6 +48,18 @@ The following are variables exported by the player controller that can be modifi
 | `MOUSE_SENS` | `0.002` | The mouse sensitivity. |
 | `AUTO_BHOP` | `false` | When on, the player can hold in the `player_jump` input and automatically jump when detected on the floor. |
 
+## Preview
+Here are some GIFs and images showcasing the controller as of *3-2-24*.
+
+### Video
+![GIF 01](./images/previewgif1.gif)
+
+### Images
+![Image 01](./images/preview1.png)
+
+![Image 02](./images/preview2.png)
+
 ## Credits
 * [Christian Deacon](https://github.com/gamemann)
 * [BleyChimera](https://github.com/BleyChimera) - Their code was a base for this controller with additions/changes. Thank you!
+* [Prototype Textures](https://www.kenney.nl/assets/prototype-textures)
