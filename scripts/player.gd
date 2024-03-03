@@ -38,10 +38,15 @@ var floor_check := {}
 
 var vel_planar = Vector2.ZERO
 
+var head_pos_offset
+
 @onready var head = $Head
 
 func _ready():
+	# Capture the user's mouse.
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
+	head_pos_offset = head.position.y
 
 func _check_floor() -> bool:
 	var origin = global_position + FLOOR_RAY_POS
@@ -62,9 +67,9 @@ func get_slope_angle(normal): return normal.angle_to(up_direction)
 
 func _physics_process(delta):	
 	if is_crouching:
-		head.position.y = lerp(head.position.y, 0.72 + CROUCH_DEPTH, delta * LERP_SPEED)
+		head.position.y = lerp(head.position.y, head_pos_offset + CROUCH_DEPTH, delta * LERP_SPEED)
 	else:
-		head.position.y = lerp(head.position.y, 0.72, delta * LERP_SPEED)
+		head.position.y = lerp(head.position.y, head_pos_offset, delta * LERP_SPEED)
 	
 	vel_planar = Vector2(velocity.x, velocity.z)
 	
