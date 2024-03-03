@@ -121,3 +121,4 @@ shadow_enabled = true
 
 [node name="Player" parent="." instance=ExtResource("4_1bymi")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.32315, 1.31186, 18.6251)
+AUTO_BHOP = true
