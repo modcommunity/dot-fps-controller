@@ -65,7 +65,7 @@ func _check_floor() -> bool:
 	
 func get_slope_angle(normal): return normal.angle_to(up_direction)
 
-func _physics_process(delta):	
+func _physics_process(delta):
 	if is_crouching:
 		head.position.y = lerp(head.position.y, head_pos_offset + CROUCH_DEPTH, delta * LERP_SPEED)
 	else:
@@ -106,7 +106,9 @@ func _physics_process(delta):
 		# Apply gravity while in the air.
 		vel_vertical -= GRAVITY_FORCE * delta
 	else:
-		vel_planar -= vel_planar.normalized() * delta * ((MAX_G_ACCEL * max_ground_speed) / 2.0)
+		var toRemove = (MAX_G_ACCEL * max_ground_speed) / 2.0
+		
+		vel_planar -= vel_planar.normalized() * delta * toRemove
 		
 		if vel_planar.length_squared() < 1.0 and wish_dir.length_squared() < 0.01:
 			vel_planar = Vector2.ZERO
@@ -123,7 +125,7 @@ func _physics_process(delta):
 	
 	# Determine the velocity to add.
 	# We use lerp() to smooth
-	if on_floor:
+	if on_floor and not vel_planar.is_zero_approx():
 		var new_vel_planar = vel_planar + (wish_dir * add_speed) 
 		vel_planar = lerp(Vector2(velocity.x, velocity.z), new_vel_planar, delta * FRICTION)
 	else:
