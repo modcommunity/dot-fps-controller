@@ -1,4 +1,4 @@
-An open source 3D first-person player controller for [Godot Engine](https://godotengine.org/). This controller currently supports air strafing, bunny hopping, crouching, walking, and more!
+An open source 3D first-person player controller for [Godot Engine](https://godotengine.org/) (made in version *4.2+*). This controller currently supports air strafing, bunny hopping, crouching, walking, and more!
 
 This asset is a big work in progress and we plan on adding more features along with improving the current player movement in the future as we develop our own [open source games](https://moddingcommunity.com/forum/335-dot-games/).
 
