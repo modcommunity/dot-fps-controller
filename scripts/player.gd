@@ -1,7 +1,6 @@
 extends CharacterBody3D
 
 @export_category("Movement")
-
 @export var MAX_G_SPEED := 6.0
 @export var MAX_S_SPEED := 7.0
 @export var MAX_W_SPEED := 4.0
@@ -39,6 +38,8 @@ var floor_check := {}
 var vel_planar = Vector2.ZERO
 
 var head_pos_offset
+
+var cur_speed = 0
 
 @onready var head = $Head
 
@@ -114,14 +115,14 @@ func _physics_process(delta):
 			vel_planar = Vector2.ZERO
 	
 	# Retrieve the current speed.
-	var current_speed = vel_planar.dot(wish_dir)
+	cur_speed = vel_planar.dot(wish_dir)
 
 	# Calculate max speed and acceleration.
 	var max_speed = max_ground_speed if on_floor else MAX_AIR_SPEED
 	var max_accel = (MAX_G_ACCEL * max_ground_speed) if on_floor else MAX_AIR_ACCEL
 	
 	# Calculate speed to add.
-	var add_speed = clamp(max_speed - current_speed, 0.0, max_accel * delta)
+	var add_speed = clamp(max_speed - cur_speed, 0.0, max_accel * delta)
 	
 	# Determine the velocity to add.
 	# We use lerp() to smooth

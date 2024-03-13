@@ -1,6 +1,7 @@
-[gd_scene load_steps=12 format=3 uid="uid://donl5m4h4x1fu"]
+[gd_scene load_steps=13 format=3 uid="uid://donl5m4h4x1fu"]
 
 [ext_resource type="Texture2D" uid="uid://qqb4n2knhhg5" path="res://textures/world/ground.png" id="1_1a2q6"]
+[ext_resource type="Script" path="res://scripts/test.gd" id="1_p3bd0"]
 [ext_resource type="Texture2D" uid="uid://dgrnesw074cp2" path="res://textures/world/platform.png" id="2_cim0a"]
 [ext_resource type="Texture2D" uid="uid://bafkc52olkf6v" path="res://textures/sky/sky1.jpg" id="2_qxxg3"]
 [ext_resource type="PackedScene" uid="uid://qsutnn61opbk" path="res://scenes/player.tscn" id="4_1bymi"]
@@ -29,6 +30,7 @@ background_mode = 2
 sky = SubResource("Sky_qdd7g")
 
 [node name="Main" type="Node3D"]
+script = ExtResource("1_p3bd0")
 
 [node name="World" type="Node3D" parent="."]
 
@@ -122,3 +124,26 @@ shadow_enabled = true
 [node name="Player" parent="." instance=ExtResource("4_1bymi")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.32315, 1.31186, 18.6251)
 AUTO_BHOP = true
+
+[node name="UI" type="Node2D" parent="."]
+
+[node name="Container" type="SubViewportContainer" parent="UI"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_right = 1150.0
+offset_bottom = 647.0
+grow_horizontal = 2
+
+[node name="Port" type="SubViewport" parent="UI/Container"]
+transparent_bg = true
+
+[node name="FPS" type="Label" parent="UI/Container/Port"]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "FPS: 0"
+
+[node name="Speed" type="Label" parent="UI/Container/Port"]
+offset_top = 24.0
+offset_right = 65.0
+offset_bottom = 47.0
+text = "Speed: 0"
