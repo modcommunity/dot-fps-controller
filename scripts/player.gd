@@ -44,9 +44,6 @@ var cur_speed = 0
 @onready var head = $Head
 
 func _ready():
-	# Capture the user's mouse.
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	
 	head_pos_offset = head.position.y
 
 func _check_floor() -> bool:

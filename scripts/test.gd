@@ -6,7 +6,7 @@ extends Node
 @onready var ply = $Player
 
 func _ready():
-	pass
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _process(delta):
 	# Update FPS label.
