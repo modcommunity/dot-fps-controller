@@ -1,12 +1,36 @@
-[gd_scene load_steps=3 format=3 uid="uid://qsutnn61opbk"]
+[gd_scene load_steps=10 format=3 uid="uid://qsutnn61opbk"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_qlsi1"]
+[ext_resource type="Script" path="res://scripts/player/state.gd" id="2_scsrl"]
+[ext_resource type="Script" path="res://scripts/player/walk.gd" id="3_ajwqp"]
+[ext_resource type="Script" path="res://scripts/player/sprint.gd" id="4_7u8gf"]
+[ext_resource type="Script" path="res://scripts/player/run.gd" id="5_nq5eo"]
+[ext_resource type="Script" path="res://scripts/player/air.gd" id="6_80psm"]
+[ext_resource type="Script" path="res://scripts/player/crouching.gd" id="7_32mgo"]
+[ext_resource type="Script" path="res://scripts/player/crouch.gd" id="8_cli1f"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sdjh8"]
 
 [node name="Player" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.009, 0)
 script = ExtResource("1_qlsi1")
+MAX_G_SPEED = null
+MAX_S_SPEED = null
+MAX_W_SPEED = null
+MAX_C_SPEED = null
+MAX_G_ACCEL = null
+MAX_AIR_SPEED = null
+MAX_AIR_ACCEL = null
+JUMP_FORCE = null
+GRAVITY_FORCE = null
+MAX_SLOPE = null
+LERP_SPEED = null
+FRICTION = null
+CROUCH_DEPTH = null
+FLOOR_RAY_POS = null
+FLOOR_RAY_REACH = null
+MOUSE_SENS = null
+AUTO_BHOP = null
 
 [node name="Collision" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_sdjh8")
@@ -16,3 +40,24 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.628746, 0)
 
 [node name="Camera" type="Camera3D" parent="Head"]
 fov = 90.0
+
+[node name="State" type="Node" parent="."]
+script = ExtResource("2_scsrl")
+
+[node name="Walk" type="Node" parent="State"]
+script = ExtResource("3_ajwqp")
+
+[node name="Sprint" type="Node" parent="State"]
+script = ExtResource("4_7u8gf")
+
+[node name="Run" type="Node" parent="State"]
+script = ExtResource("5_nq5eo")
+
+[node name="Air" type="Node" parent="State"]
+script = ExtResource("6_80psm")
+
+[node name="Crouching" type="Node" parent="State"]
+script = ExtResource("7_32mgo")
+
+[node name="Crouch" type="Node" parent="State"]
+script = ExtResource("8_cli1f")

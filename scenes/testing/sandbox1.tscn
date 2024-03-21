@@ -136,6 +136,8 @@ grow_horizontal = 2
 
 [node name="Port" type="SubViewport" parent="UI/Container"]
 transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 4
 
 [node name="FPS" type="Label" parent="UI/Container/Port"]
 offset_right = 40.0

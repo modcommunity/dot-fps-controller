@@ -1,4 +1,5 @@
-extends CharacterBody3D
+extends Player_Input
+class_name Player
 
 @export_category("Movement")
 @export var MAX_G_SPEED := 6.0
@@ -61,7 +62,8 @@ func _check_floor() -> bool:
 	
 	return collided
 	
-func get_slope_angle(normal): return normal.angle_to(up_direction)
+func get_slope_angle(normal):
+	return normal.angle_to(up_direction)
 
 func _physics_process(delta):
 	if is_crouching:
