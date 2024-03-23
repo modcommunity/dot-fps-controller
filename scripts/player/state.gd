@@ -1,7 +1,7 @@
 extends Node
 
 var ply: Player
-var settings: Resource
+var settings: Player_Settings
 
 func _ready():
 	var _owner = get_parent()

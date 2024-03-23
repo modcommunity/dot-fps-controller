@@ -16,5 +16,5 @@ func _process(delta):
 		fps_label.text = "FPS: %s" % fps
 		
 	if speed_label and ply:
-		speed_label.text = "Speed: %s" % ply.cur_speed
+		speed_label.text = "Speed: %s" % ply.speed
 		

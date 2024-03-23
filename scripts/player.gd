@@ -1,187 +1,112 @@
-extends Player_Input
+extends CharacterBody3D
 class_name Player
 
-@export_category("Movement")
-@export var MAX_G_SPEED := 6.0
-@export var MAX_S_SPEED := 7.0
-@export var MAX_W_SPEED := 4.0
-@export var MAX_C_SPEED := 3.0
-
-@export var MAX_G_ACCEL := 20.0
-
-@export var MAX_AIR_SPEED := 0.5
-@export var MAX_AIR_ACCEL := 100.0
-
-@export var JUMP_FORCE := 4.5
-@export var GRAVITY_FORCE := 15.0
-
-@export var MAX_SLOPE := deg_to_rad(46.0)
-
-@export var LERP_SPEED := 12.0
-
-@export var FRICTION := 10.0
-
-@export var CROUCH_DEPTH := -0.5
-
-@export_category("Settings")
-@export var FLOOR_RAY_POS := Vector3.ZERO
-@export var FLOOR_RAY_REACH := 3.0
-@export var MOUSE_SENS := 0.002
-@export var AUTO_BHOP := false
-
-var on_floor := false
-var is_walking := false
-var is_crouching := false
-var is_jumping := false
-
-var floor_check := {}
-
-var vel_planar = Vector2.ZERO
-
-var head_pos_offset
-
-var cur_speed = 0
+var settings: Player_Settings
+var input: Player_Input 
 
 @onready var head = $Head
+@onready var camera = $Head/Camera
+
+@export_category("State")
+@export var vel = Vector3.ZERO
+@export var snap = Vector3.DOWN
+
+@export var is_noclip = false
+@export var is_crouching : bool
+@export var is_crouched : bool
+@export var is_sprinting : bool
+@export var can_jump : bool
+@export var was_on_floor = false
+@export var on_floor = false
+@export var should_jump = false
+
+@export var move_side : float
+@export var move_up : float
+@export var move_forward : float
+@export var look_y : float
+@export var look_x : float
+
+var speed = 0
 
 func _ready():
-	head_pos_offset = head.position.y
-
-func _check_floor() -> bool:
-	var origin = global_position + FLOOR_RAY_POS
-	var target = Vector3.DOWN * FLOOR_RAY_REACH
+	# Load our settings class.
+	settings = load("res://scripts/player/settings.gd").new()
 	
-	var query = PhysicsRayQueryParameters3D.create(origin, origin + target)
+	# Load our input class + assign ply to self.
+	input = load("res://scripts/player/input.gd").new()
+	input.ply = self
 	
-	var check = get_world_3d().direct_space_state.intersect_ray(query)
+	if settings:
+		speed = settings.max_speed
 	
-	var collided = check.size() > 0
-	
-	if collided:
-		floor_check = check
-	
-	return collided
-	
-func get_slope_angle(normal):
-	return normal.angle_to(up_direction)
-
-func _physics_process(delta):
-	if is_crouching:
-		head.position.y = lerp(head.position.y, head_pos_offset + CROUCH_DEPTH, delta * LERP_SPEED)
-	else:
-		head.position.y = lerp(head.position.y, head_pos_offset, delta * LERP_SPEED)
-	
-	vel_planar = Vector2(velocity.x, velocity.z)
-	
-	var vel_vertical := velocity.y
-	
-	if on_floor:
-		var collided = _check_floor()
-		var slope_angle = get_slope_angle(floor_check.normal) if floor_check else 0
-		
-		on_floor = collided and slope_angle < MAX_SLOPE
-		
-	var wish_dir := Input.get_vector("player_l", "player_r", "player_f", "player_b")
-	wish_dir = wish_dir.rotated(-head.rotation.y)
-	
-	# Check for jump input.
-	if on_floor and is_jumping:
-		on_floor = false
-		vel_vertical = JUMP_FORCE
-		
-		# If auto bunny hop is disabled, set jumping to false.
-		if not AUTO_BHOP:
-			is_jumping = false
-
-	# Determine the max ground speed.
-	var max_ground_speed = MAX_G_SPEED
-	
-	if is_crouching:
-		max_ground_speed = MAX_C_SPEED
-	elif is_walking:
-		max_ground_speed = MAX_W_SPEED
-		
-	# Check if player is on the floor.
-	if not on_floor:
-		# Apply gravity while in the air.
-		vel_vertical -= GRAVITY_FORCE * delta
-	else:
-		var toRemove = (MAX_G_ACCEL * max_ground_speed) / 2.0
-		
-		vel_planar -= vel_planar.normalized() * delta * toRemove
-		
-		if vel_planar.length_squared() < 1.0 and wish_dir.length_squared() < 0.01:
-			vel_planar = Vector2.ZERO
-	
-	# Retrieve the current speed.
-	cur_speed = vel_planar.dot(wish_dir)
-
-	# Calculate max speed and acceleration.
-	var max_speed = max_ground_speed if on_floor else MAX_AIR_SPEED
-	var max_accel = (MAX_G_ACCEL * max_ground_speed) if on_floor else MAX_AIR_ACCEL
-	
-	# Calculate speed to add.
-	var add_speed = clamp(max_speed - cur_speed, 0.0, max_accel * delta)
-	
-	# Determine the velocity to add.
-	# We use lerp() to smooth
-	if on_floor and not vel_planar.is_zero_approx():
-		var new_vel_planar = vel_planar + (wish_dir * add_speed) 
-		vel_planar = lerp(Vector2(velocity.x, velocity.z), new_vel_planar, delta * FRICTION)
-	else:
-		vel_planar += wish_dir * add_speed
-	
-	velocity = Vector3(vel_planar.x, vel_vertical, vel_planar.y)
-	
-	var collision = move_and_collide(velocity * delta)
-	
-	if collision:
-		move_and_collide(collision.get_remainder().slide(collision.get_normal()))
-		
-		if not on_floor:
-			velocity = velocity.slide(collision.get_normal())
-			
-			var slope_angle = get_slope_angle(collision.get_normal())
-			
-			if slope_angle < MAX_SLOPE:
-				on_floor = true
-				velocity.y = 0.0
-	else:
-		if on_floor:
-			if _check_floor():
-				move_and_collide(floor_check.position - global_position)
-
 func _input(event):
 	if event is InputEventMouseMotion:
-		# Move the mouse from left to right depending on where we're going.
-		head.rotation.y += -event.relative.x * MOUSE_SENS
-		head.rotation.x += -event.relative.y * MOUSE_SENS
+		input.HandleLook(event)
 		
-		# Make sure we can't look veritically all the way.
-		head.rotation_degrees.x = clamp(head.rotation_degrees.x, -89.0, 89.0)
-	# Look for key presses.
-	elif event is InputEventKey:
-		# Look for crouch action.
-		if event.is_action_pressed("player_crouch"):			
-			is_crouching = true
-		elif event.is_action_released("player_crouch"):
-			is_crouching = false
+func _process(delta):
+	# Clamp field of view.
+	camera.fov = clamp(70 + sqrt(vel.length() * 7), 90, 180)
+	
+	# Handle view angles.
+	input.HandleViewAngles(delta)
+	
+	# Handle input keys.
+	input.HandleKeys()
+	
+	# Set snap.
+	snap = -get_floor_normal()
+	
+	# Tell us if we were on the floor or not.
+	was_on_floor = on_floor
+	
+	# Set velocity.
+	velocity = vel
+	move_and_slide_collide()
+	vel = velocity
+	
+	if (on_floor):
+		should_jump = true
+
+func move_and_slide_collide() -> bool:
+	var collision := false
+	
+	on_floor = false
+	
+	# Check floor.
+	var checkMot := velocity * (1/60.)
+	checkMot.y -= settings.gravity * (1/360.)
+	
+	var testCol := move_and_collide(checkMot, true)
+	
+	if testCol:
+		var testNorm = testCol.get_normal()
 		
-		# Look for player walk action.
-		if event.is_action_pressed("player_walk"):
-			is_walking = true
-		elif event.is_action_released("player_walk"):
-			is_walking = false
+		if testNorm.angle_to(up_direction) < settings.max_slope_angle:
+			on_floor = true
 			
-		if event.is_action_pressed("player_jump"):
-			is_jumping = true
-		elif event.is_action_released("player_jump"):
-			is_jumping = false
-	# Look for mouse button presses including mouse wheel up or down.
-	elif event is InputEventMouseButton:
-		if event.is_action_pressed("player_jump"):
-			is_jumping = true
+	var motion := velocity * get_delta_time()
+	
+	for step in max_slides:
+		var col := move_and_collide(motion)
+		
+		if not col:
+			break
 			
-			# Removes extra jump.
-			if not on_floor and is_jumping:
-				is_jumping = false
+		var norm = col.get_normal()
+		
+		motion = col.get_remainder().slide(norm)
+		velocity = velocity.slide(norm)
+		
+		collision = true
+		
+	return collision
+	
+func get_delta_time() -> float:
+	if Engine.is_in_physics_frame():
+		return get_physics_process_delta_time()
+		
+	return get_process_delta_time()
+	
+
+func _physics_process(delta):
+	pass

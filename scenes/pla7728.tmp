@@ -8,6 +8,22 @@
 [node name="Player" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.009, 0)
 script = ExtResource("1_qlsi1")
+vel = null
+snap = null
+ply_noclip = null
+ply_crouching = null
+ply_crouched = null
+ply_sprinting = null
+ply_can_jump = null
+ply_was_on_floor = null
+ply_on_floor = null
+ply_should_jump = null
+ply_move_side = null
+ply_move_up = null
+ply_move_forward = null
+ply_look_y = null
+ply_look_x = null
+cam_path = null
 
 [node name="Collision" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_sdjh8")
