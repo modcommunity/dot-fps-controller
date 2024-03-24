@@ -30,13 +30,13 @@ class_name Player_Settings
 @export var max_air_speed = 1
 @export var friction = 3
 @export var stop_speed = 10
-@export var gravity = 60
+@export var gravity = 30
 @export var max_velocity = 40000
 
 @export var jump_height = 1
 @export var step_size = 8
 
-@export var max_speed = 8
+@export var max_speed = 5
 @export var base_speed = 14
 @export var crouch_speed = 10
 @export var sprint_speed = 18

@@ -83,7 +83,7 @@ func _process(delta):
 		utils.debug_msg(2, "[PLY] Starting jump timer!")
 		jump_timer.start()
 	
-	if (on_floor):
+	if on_floor:
 		should_jump = true
 	else:
 		if jump_timer.is_stopped():
@@ -98,7 +98,7 @@ func clear_jump_timer():
 	on_floor = false
 
 func move_and_slide_collide() -> bool:
-	var collision := false
+	var collided := false
 	
 	on_floor = false
 	
@@ -127,9 +127,9 @@ func move_and_slide_collide() -> bool:
 		motion = col.get_remainder().slide(norm)
 		velocity = velocity.slide(norm)
 		
-		collision = true
+		collided = true
 		
-	return collision
+	return collided
 	
 func get_delta_time() -> float:
 	if Engine.is_in_physics_frame():

@@ -15,8 +15,11 @@ func setup():
 	# Load and initialize our available states.
 	init_state("run")
 	init_state("air")
+	
+	init_state("standing")
 	init_state("crouch")
 	init_state("crouching")
+	
 	init_state("sprint")
 	init_state("walk")
 	
@@ -35,7 +38,7 @@ func init_state(name):
 	# Assign ply.
 	states[name].ply = ply
 
-func add_state(name, msg = {}):
+func add_state(name, data = {}):
 	if name not in states:
 		return
 		
@@ -44,9 +47,9 @@ func add_state(name, msg = {}):
 		active.append(name)
 		
 		# Call activate.
-		states[name].activate(msg)
+		states[name].activate(data)
 		
-func del_state(name, msg = {}):
+func del_state(name, data = {}):
 	if name not in states:
 		return
 		
@@ -55,7 +58,7 @@ func del_state(name, msg = {}):
 		active.erase(name)
 		
 		# Call deactivate.
-		states[name].deactivate(msg)
+		states[name].deactivate(data)
 		
 func swap_state(old, new, old_data = {}, new_data = {}):
 	if new not in states:

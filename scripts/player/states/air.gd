@@ -7,7 +7,7 @@ func activate(data = {}):
 	
 	ply.on_floor = false
 	
-	if "do_jump" in data:
+	if "jump" in data:
 		check_jump()
 		
 func deactivate(data = {}):
@@ -21,7 +21,7 @@ func _physics_process(delta):
 	if ply.on_floor:
 		ply.state.swap_state("air", "run")
 	else:
-		if Input.is_action_just_pressed("player_jump"):
+		if Input.is_action_pressed("player_jump"):
 			check_jump()
 	
 func _process(delta):

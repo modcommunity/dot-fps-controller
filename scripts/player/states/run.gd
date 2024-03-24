@@ -24,7 +24,7 @@ func _physics_process(delta):
 		check_jump()
 		
 		ply.on_floor = false
-		ply.state.swap_state("run", "jump", {}, { do_jump = true })
+		ply.state.swap_state("run", "air", {}, { jump = true })
 		
 		ply.utils.debug_msg(2, "[STATE_RUN] Swapping to air state since player pressed jump button!")
 	
