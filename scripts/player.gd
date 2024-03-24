@@ -2,10 +2,12 @@ extends CharacterBody3D
 class_name Player
 
 var settings: Player_Settings
-var input: Player_Input 
+var input: Player_Input
+var state: Player_State
 
 @onready var head = $Head
 @onready var camera = $Head/Camera
+@onready var collision = $Collision
 
 @export_category("State")
 @export var vel = Vector3.ZERO
@@ -29,12 +31,21 @@ var input: Player_Input
 var speed = 0
 
 func _ready():
+	# Get this script's base directory.
+	var base_dir = get_script().resource_path.get_base_dir()
+	
 	# Load our settings class.
-	settings = load("res://scripts/player/settings.gd").new()
+	settings = load(base_dir + "/player/settings.gd").new()
 	
 	# Load our input class + assign ply to self.
-	input = load("res://scripts/player/input.gd").new()
+	input = load(base_dir + "/player/input.gd").new()
 	input.ply = self
+	
+	# Load our state class and assign ply to self.
+	state = load(base_dir + "/player/state.gd").new()
+	state.ply = self
+	
+	state.setup()
 	
 	if settings:
 		speed = settings.max_speed
@@ -66,6 +77,9 @@ func _process(delta):
 	
 	if (on_floor):
 		should_jump = true
+		
+	# Handle states.
+	state._process(delta)
 
 func move_and_slide_collide() -> bool:
 	var collision := false
@@ -109,4 +123,11 @@ func get_delta_time() -> float:
 	
 
 func _physics_process(delta):
-	pass
+	# Handle states.
+	state._physics_process(delta)
+	
+func VelocityCheck():
+	if vel.length() > settings.max_velocity:
+		vel = settings.max_velocity
+	elif vel.length() < -settings.max_velocity:
+		vel = -settings.max_velocity
