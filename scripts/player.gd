@@ -1,32 +1,35 @@
 extends CharacterBody3D
 class_name Player
 
-var settings: Player_Settings
-var input: Player_Input
-var state: Player_State
+var input : Player_Input
+var state : Player_State
+var utils : Player_Utils
 
 @onready var head = $Head
 @onready var camera = $Head/Camera
 @onready var collision = $Collision
+@onready var jump_timer = $JumpTimer
 
-@export_category("State")
-@export var vel = Vector3.ZERO
-@export var snap = Vector3.DOWN
+@onready var settings = $Settings
 
-@export var is_noclip = false
-@export var is_crouching : bool
-@export var is_crouched : bool
-@export var is_sprinting : bool
-@export var can_jump : bool
-@export var was_on_floor = false
-@export var on_floor = false
-@export var should_jump = false
+# Local variables.
+var vel = Vector3.ZERO
+var snap = Vector3.DOWN
 
-@export var move_side : float
-@export var move_up : float
-@export var move_forward : float
-@export var look_y : float
-@export var look_x : float
+var is_noclip = false
+var is_crouching : bool
+var is_crouched : bool
+var is_sprinting : bool
+var can_jump : bool
+var was_on_floor = false
+var on_floor = false
+var should_jump = false
+
+var move_side : float
+var move_up : float
+var move_forward : float
+var look_y : float
+var look_x : float
 
 var speed = 0
 
@@ -34,8 +37,9 @@ func _ready():
 	# Get this script's base directory.
 	var base_dir = get_script().resource_path.get_base_dir()
 	
-	# Load our settings class.
-	settings = load(base_dir + "/player/settings.gd").new()
+	# Load our utils class.
+	utils = load(base_dir + "/player/utils.gd").new()
+	utils.ply = self
 	
 	# Load our input class + assign ply to self.
 	input = load(base_dir + "/player/input.gd").new()
@@ -75,11 +79,23 @@ func _process(delta):
 	move_and_slide_collide()
 	vel = velocity
 	
+	if was_on_floor and not on_floor:
+		utils.debug_msg(2, "[PLY] Starting jump timer!")
+		jump_timer.start()
+	
 	if (on_floor):
 		should_jump = true
+	else:
+		if jump_timer.is_stopped():
+			should_jump = false
 		
 	# Handle states.
 	state._process(delta)
+	
+func clear_jump_timer():
+	jump_timer.stop()
+	should_jump = false
+	on_floor = false
 
 func move_and_slide_collide() -> bool:
 	var collision := false
@@ -121,12 +137,11 @@ func get_delta_time() -> float:
 		
 	return get_process_delta_time()
 	
-
 func _physics_process(delta):
 	# Handle states.
 	state._physics_process(delta)
 	
-func VelocityCheck():
+func velocity_check():
 	if vel.length() > settings.max_velocity:
 		vel = settings.max_velocity
 	elif vel.length() < -settings.max_velocity:

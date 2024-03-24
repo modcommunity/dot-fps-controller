@@ -1,15 +1,15 @@
 extends Resource
 
-var ply: Player
+var ply : Player
 
 func activate(data = {}):
-	print("[STATE_RUN] Activated!")
+	ply.utils.debug_msg(1, "[STATE_RUN] Activated!")
 	
 func deactivate(data = {}):
 	pass
 
 func _physics_process(delta):
-	print("[STATE_RUN] physics process!")
+	ply.utils.debug_msg(1, "[STATE_RUN] physics process!")
 	
 	if ply.on_floor:
 		floor_move(delta)
@@ -17,14 +17,18 @@ func _physics_process(delta):
 		# Swap to air state.
 		ply.state.swap_state("run", "air")
 		
+		ply.utils.debug_msg(2, "[STATE_RUN] Swapping to air state since player isn't on floor!")
+		
 	# Check for jump.
-	if Input.is_action_just_pressed("player_jump") && not ply.is_crouched && ply.should_jump:
+	if ((ply.settings.can_auto_hop and Input.is_action_pressed("player_jump")) or Input.is_action_just_pressed("player_jump")) and not ply.is_crouched and ply.should_jump:
 		check_jump()
 		
 		ply.on_floor = false
 		ply.state.swap_state("run", "jump", {}, { do_jump = true })
+		
+		ply.utils.debug_msg(2, "[STATE_RUN] Swapping to air state since player pressed jump button!")
 	
-	ply.VelocityCheck()
+	ply.velocity_check()
 	
 func floor_move(delta):
 	var forward = Vector3.FORWARD
@@ -39,7 +43,7 @@ func floor_move(delta):
 	var f_move = ply.move_forward
 	var s_move = ply.move_side
 	
-	var wish_vel = forward * f_move * side * s_move
+	var wish_vel = side * s_move + forward * f_move
 	
 	friction(delta)
 	
@@ -71,7 +75,7 @@ func friction(delta):
 	var new_speed = speed - drop
 	
 	if new_speed < 0:
-		return
+		new_speed = 0
 		
 	if new_speed != speed:
 		new_speed /= speed
@@ -96,6 +100,8 @@ func check_jump():
 	
 	if not ply.should_jump or ply.velocity.y > 15:
 		return
+		
+	ply.clear_jump_timer()
 		
 	var groundFactor = 1.0
 	

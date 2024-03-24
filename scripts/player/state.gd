@@ -1,9 +1,9 @@
 extends Resource
 class_name Player_State
 
-var ply: Player
+var ply : Player
 
-@export var initial_states = ["run"]
+var initial_states = ["run"]
 
 var states = {}
 var active = []
@@ -12,7 +12,7 @@ func setup():
 	# Get base directory.
 	var base_dir = get_script().resource_path.get_base_dir()
 	
-	# Load our states into directory.
+	# Load and initialize our available states.
 	init_state("run")
 	init_state("air")
 	init_state("crouch")
@@ -57,15 +57,15 @@ func del_state(name, msg = {}):
 		# Call deactivate.
 		states[name].deactivate(msg)
 		
-func swap_state(old, new, oldMsg = {}, newMsg = {}):
+func swap_state(old, new, old_data = {}, new_data = {}):
 	if new not in states:
 		return
 	
 	# Remove old state.
-	del_state(old, oldMsg)
+	del_state(old, old_data)
 	
 	# Add new state.
-	add_state(new, newMsg)
+	add_state(new, new_data)
 		
 func _physics_process(delta):
 	# Execute active states.

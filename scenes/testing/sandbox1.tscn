@@ -124,6 +124,10 @@ shadow_enabled = true
 [node name="Player" parent="." instance=ExtResource("4_1bymi")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.32315, 1.31186, 18.6251)
 
+[node name="Settings" parent="Player" index="2"]
+verbose = 3
+can_auto_hop = true
+
 [node name="UI" type="Node2D" parent="."]
 
 [node name="Container" type="SubViewportContainer" parent="UI"]
@@ -148,3 +152,5 @@ offset_top = 24.0
 offset_right = 65.0
 offset_bottom = 47.0
 text = "Speed: 0"
+
+[editable path="Player"]
