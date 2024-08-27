@@ -20,9 +20,6 @@ func _physics_process(delta):
 	
 	if ply.on_floor:
 		ply.state.swap_state("air", "run")
-	else:
-		if Input.is_action_pressed("player_jump"):
-			check_jump()
 	
 func _process(delta):
 	pass
@@ -72,8 +69,7 @@ func accelerate(wish_dir, wish_speed, accel, delta):
 	var accel_speed = accel * wish_speed * delta
 	accel_speed = min(accel_speed, add_speed)
 	
-	for i in range(3):
-		ply.vel += accel_speed * wish_dir
+	ply.vel += accel_speed * wish_dir
 	
 func check_jump():
 	ply.snap = Vector3.ZERO
