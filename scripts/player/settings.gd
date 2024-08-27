@@ -19,22 +19,22 @@ class_name Player_Settings
 @export var look_speed_y = 0.3
 @export var look_speed_x = 0.3
 
-@export var speed_side = 20
-@export var speed_forward = 20
-@export var speed_up = 20
-@export var speed_back = 20
+@export var speed_side = 15
+@export var speed_forward = 15
+@export var speed_up = 15
+@export var speed_back = 15
 
 @export var accelerate = 3
-@export var air_accelerate = 150
-@export var max_accelerate = 7
+@export var air_accelerate = 100
+@export var max_accelerate = 5
 @export var max_air_speed = 1
-@export var friction = 3
+@export var friction = 1.5
 @export var stop_speed = 10
-@export var gravity = 30
+@export var gravity = 25
 @export var max_velocity = 40000
 
 @export var jump_height = 1
-@export var step_size = 8
+@export var step_size = 10
 
 @export var max_speed = 5
 @export var base_speed = 14
