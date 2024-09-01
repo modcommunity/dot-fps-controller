@@ -28,7 +28,7 @@ The following input actions need to be added to the Godot project via *Project -
 
 **Note** - Mouse wheel up button is supported for the `player_jump` input!
 
-**Note** - The `player_crouch`, `player_shift`, and `player_walk` inputs works as press and release. Therefore, the player must hold the input down to crouch and release it when they want to stop crouching.
+**Note** - The `player_crouch`, `player_shift`, and `player_walk` inputs works as press and release. For example, the player must hold the input down to crouch and release it when they want to stop crouching.
 
 ## Controller Settings
 The following are variables exported by the player controller that can be modified outside of the controller.
