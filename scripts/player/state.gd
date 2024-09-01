@@ -9,16 +9,11 @@ var states = {}
 var active = []
 
 func setup():
-	# Get base directory.
-	var base_dir = get_script().resource_path.get_base_dir()
-	
 	# Load and initialize our available states.
 	init_state("run")
 	init_state("air")
 	
-	init_state("standing")
 	init_state("crouch")
-	init_state("crouching")
 	
 	init_state("sprint")
 	init_state("walk")
@@ -69,7 +64,13 @@ func swap_state(old, new, old_data = {}, new_data = {}):
 	
 	# Add new state.
 	add_state(new, new_data)
+	
+func has_state(name):
+	if name in active:
+		return true
 		
+	return false
+
 func _physics_process(delta):
 	# Execute active states.
 	for state in active:

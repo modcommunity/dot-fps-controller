@@ -26,12 +26,14 @@ var on_floor = false
 var should_jump = false
 
 var move_side : float
-var move_up : float
 var move_forward : float
+
 var look_y : float
 var look_x : float
 
-var speed = 0
+var speed_multiplier = 1
+
+var head_init_pos
 
 func _ready():
 	# Get this script's base directory.
@@ -50,9 +52,9 @@ func _ready():
 	state.ply = self
 	
 	state.setup()
-	
-	if settings:
-		speed = settings.max_speed
+
+	# Get head initial position.
+	head_init_pos = head.position.y 
 	
 func _input(event):
 	if event is InputEventMouseMotion:

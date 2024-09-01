@@ -3,13 +3,13 @@ extends Resource
 var ply : Player
 
 func activate(data = {}):
-	ply.utils.debug_msg(1, "[STATE_RUN] Activated!")
+	ply.utils.debug_msg(1, "[STATE_RUN] Activated! Data => %s" % data)
 	
 func deactivate(data = {}):
-	pass
+	ply.utils.debug_msg(1, "[STATE_RUN] Deactivated! Data => %s" % data)
 
 func _physics_process(delta):
-	ply.utils.debug_msg(1, "[STATE_RUN] physics process!")
+	ply.utils.debug_msg(5, "[STATE_RUN] physics process!")
 	
 	if ply.on_floor:
 		floor_move(delta)
@@ -54,10 +54,10 @@ func floor_move(delta):
 	var wish_speed = wish_vel.length()
 	
 	# Clamp.
-	if wish_speed != 0 and wish_speed > ply.speed:
-		wish_vel *= ply.speed / wish_speed
-		wish_speed = ply.speed
-
+	if wish_speed != 0 and wish_speed > ply.settings.max_speed:
+		wish_vel *= ply.settings.max_speed / wish_speed
+		wish_speed = ply.settings.max_speed
+		
 	accelerate(wish_dir, wish_speed, ply.settings.accelerate, delta)
 	
 func friction(delta):
@@ -118,5 +118,5 @@ func check_jump():
 	
 	ply.vel.y = max(jump_vel, jump_vel + ply.vel.y)
 	
-func _process(delta):
+func _process(_delta):
 	pass

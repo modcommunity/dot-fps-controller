@@ -11,7 +11,7 @@ func activate(data = {}):
 		check_jump()
 		
 func deactivate(data = {}):
-	pass
+	ply.utils.debug_msg(1, "[STATE_AIR] Deactivated! Data => %s" % data)
 
 func _physics_process(delta):
 	ply.utils.debug_msg(4, "[STATE_AIR] Physics process!")
@@ -21,7 +21,7 @@ func _physics_process(delta):
 	if ply.on_floor:
 		ply.state.swap_state("air", "run")
 	
-func _process(delta):
+func _process(_delta):
 	pass
 	
 func move(delta):

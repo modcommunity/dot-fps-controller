@@ -3,13 +3,17 @@ extends Resource
 var ply: Player
 
 func activate(data = {}):
-	pass
+	ply.utils.debug_msg(1, "[STATE_SPRINT] Activated! Data => %s" % data)
+
+	ply.speed_multiplier = ply.settings.sprint_speed_multiplier
 	
 func deactivate(data = {}):
-	pass
+	ply.utils.debug_msg(1, "[STATE_SPRINT] Deactivated! Data => %s" % data)
 
-func _physics_process(delta):
+	ply.speed_multiplier = 1
+
+func _physics_process(_delta):
 	pass
 	
-func _process(delta):
+func _process(_delta):
 	pass
